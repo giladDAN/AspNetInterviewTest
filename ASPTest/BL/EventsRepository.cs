@@ -23,43 +23,90 @@ namespace ASPTest
                 // Used both list and beDirectional dictionary
                 // first initial will be slow but its more efficient at run time
                 var items = new List<int>();
-                var itemsPositions = new Dictionary<int, Dictionary<int, int>>();
-                var itemsPositionsInvers = new Dictionary<int, Dictionary<int, int>>();
+                var itemsPositionsDictionary = new Dictionary<int, int>();
 
                 for (int i = 0; i < 100; i++)
                 {
                     var randomNumber = _rand.Next(0, 100);
                     items.Add(randomNumber);
 
-                    if (!itemsPositions.ContainsKey(randomNumber))
-                    {
-                        itemsPositions.Add(randomNumber, new Dictionary<int, int>());
-                        itemsPositionsInvers.Add(randomNumber, new Dictionary<int, int>());
-                    }
+                    var freeItemNextPosition = getNumbersExistence(itemsPositionsDictionary, randomNumber);
 
-                    var currentRepeatNumber = itemsPositions[randomNumber].Count;
-                    itemsPositions[randomNumber].Add(i, currentRepeatNumber);
-                    itemsPositionsInvers[randomNumber].Add(currentRepeatNumber, i);
+                    // Combin a unique key 
+                    var itemRepeatPositionHash = getCurrentRepeatHash(randomNumber, i);
+                    var itemPositionHash = getItemCurrentPositionHash(randomNumber, freeItemNextPosition);
+
+                    // Adding the locations to the dictionary
+                    // Enabling be-directional search
+                    itemsPositionsDictionary.Add(itemRepeatPositionHash, freeItemNextPosition);
+                    itemsPositionsDictionary.Add(itemPositionHash, i);
                 }
 
                 //_DataRepository.SaveItems(items); // Was not needed at first stage
-                listData.InitItems(items, itemsPositions, itemsPositionsInvers);
+
+                // Set data in to the singleton
+                listData.InitItems(items, itemsPositionsDictionary);
             }
+        }
+
+
+        private int getCurrentRepeatHash(int number, int position)
+        {
+            // Combin unique key
+            var StringToHash = number.ToString() + 'R' + position.ToString();
+            return StringToHash.GetHashCode();
+        }
+
+        private int getItemCurrentPositionHash(int number, int reapeatPosition)
+        {
+            // Combin unique key
+            var StringToHash = number.ToString() + 'P' + reapeatPosition.ToString();
+            return StringToHash.GetHashCode();
+        }
+
+        /// <summary>
+        /// Run through dictionary efficiently and check for free
+        /// item repeat position
+        /// </summary>
+        /// <param name="itemPositions"></param>
+        /// <param name="number"></param>
+        /// <returns>int free repeat number</returns>
+        private int getNumbersExistence(Dictionary<int, int> itemPositions, int number)
+        {
+            var exist = true;
+            var counter = 0;
+            while (exist)
+            {
+                var stringToHash = number.ToString() + 'P' + counter.ToString();
+                var hash = stringToHash.GetHashCode();
+
+                if (!itemPositions.ContainsKey(hash)){
+                    exist = false;
+                    return counter;
+                }
+                counter++;
+            }
+
+            return -1;
         }
 
         public int Next(int Postion)
         {
-            if (listData.Items.Count > Postion && Postion > 0)
+            if (listData.Items.Count > Postion && Postion >= 0)
             {
                 var number = listData.Items[Postion];
 
-                if (listData.ItemsPositions.ContainsKey(number))
-                {
-                    var currentRepeatNumber = listData.ItemsPositions[number][Postion];
+                var currentRepeatHash = getCurrentRepeatHash(number, Postion);
 
-                    if (listData.ItemsPositionsInvers[number].ContainsKey(currentRepeatNumber + 1))
+                if (listData.ItemsPositions.ContainsKey(currentRepeatHash))
+                {
+                    var currentRepeatNumber = listData.ItemsPositions[currentRepeatHash];
+
+                    var NextRepeatPositionHash = getItemCurrentPositionHash(number, currentRepeatNumber + 1);
+
+                    if (listData.ItemsPositions.ContainsKey(NextRepeatPositionHash))
                     {
-                        return listData.ItemsPositionsInvers[number][currentRepeatNumber + 1];
+                        return listData.ItemsPositions[NextRepeatPositionHash];
                     }
                 }
             }

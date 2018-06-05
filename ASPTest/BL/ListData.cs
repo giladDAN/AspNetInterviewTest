@@ -14,17 +14,15 @@ namespace ASPTest.BL
         private static ListData instance = null;
 
         public List<int> Items { get; private set; }
-        public Dictionary<int, Dictionary<int, int>> ItemsPositions { get; private set; }
-        public Dictionary<int, Dictionary<int, int>> ItemsPositionsInvers { get; private set; }
+        public Dictionary<int, int> ItemsPositions { get; private set; }
 
-        public void InitItems(List<int>  items, Dictionary<int, Dictionary<int, int>> itemsPositions, Dictionary<int, Dictionary<int, int>> itemsPositionsInvers)
+        public void InitItems(List<int>  items, Dictionary<int, int> itemsPositions)
         {
 
             if(Items == null)
             {
                 Items = items;
                 ItemsPositions = itemsPositions;
-                ItemsPositionsInvers = itemsPositionsInvers;
             }
         }
 
