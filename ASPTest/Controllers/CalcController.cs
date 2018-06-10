@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +10,7 @@ namespace ASPTest.Controllers
     public class CalcController : ApiController
     {
         IEvents _eventRep = new EventsRepository();
+
         /// <summary>
         /// Return Next Postion
         /// </summary>

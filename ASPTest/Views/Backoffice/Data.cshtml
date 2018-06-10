@@ -1,0 +1,43 @@
+
+@{
+    ViewBag.Title = "Data";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<h2>Data</h2>
+
+<script>
+    function getEventsBtn() {
+        var tmp = $("#ShowEvents");
+        tmp.html('');
+        var url = "/api/Data";
+        $.get(url, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                tmp.append("<li>" + data[i] + "</li>");
+            }
+        });
+    }
+
+
+    function getEventsByDateBtn() {
+        var tmp = $("#ShowEvents");
+        tmp.html('');
+        var request = $('#Date').val();
+        var url = "/api/Data?Date=" + request;
+        $.get(url, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                tmp.append("<li>" + data[i] + "</li>");
+            }
+        });
+    }
+</script>
+<div>
+    <input type="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" id="Date">
+    <button id="eventsByDateBtn" onclick="getEventsByDateBtn()"> Show Events By Date</button><br />
+    <button id="eventsBtn" onclick="getEventsBtn()"> Show All Events</button>
+
+    <p id="ShowEvents">
+    </p>
+</div>
+
+
