@@ -1,9 +1,8 @@
-﻿
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutPage1.cshtml";
 }
-
 <h2>Index</h2>
 <script>
     $(function () {
@@ -36,10 +35,12 @@
 <div>
     <input type="number" id="Number" />
     <button id="nextBtn">Next Number</button>
-    <p id="NextNumber">
+    <a href="@Url.Action("Index", "Backoffice")">
+        <span>Backoffice</span>
+    </a>
 
+    <p id="NextNumber">
     </p>
 </div>
 <div id="Items">
-
 </div>
