@@ -134,12 +134,14 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="BL\DataHandler.cs" />
     <Compile Include="BL\DataRepository.cs" />
+    <Compile Include="Controllers\BackOfficeController.cs" />
     <Compile Include="Controllers\CalcController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="BL\EventsRepository.cs" />
     <Compile Include="DAL\Lookup.cs" />
     <Compile Include="DAL\Model.cs" />
     <Compile Include="DAL\SelectedItems.cs" />
+    <Compile Include="DAL\SelectedItemsAndCount.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

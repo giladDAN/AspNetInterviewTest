@@ -1,13 +1,17 @@
 ﻿using ASPTest.DAL;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Diagnostics;
+
 
 namespace ASPTest.BL
 {
     public class DataRepository : IData
     {
+        /// <summary>
+        /// Daves the randon generated numbers
+        /// </summary>
+        /// <param name="Items"></param>
         public void SaveItems(List<int> Items)
         {
             try
@@ -27,6 +31,7 @@ namespace ASPTest.BL
             }
             catch (Exception exp)
             {
+                Debug.WriteLine(exp.Message);
             }
         }
 
@@ -39,7 +44,18 @@ namespace ASPTest.BL
         /// <returns></returns>
         public List<Tuple<int, int>> GetItemsAccroding(DateTime Date)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (Model context = new Model())
+                {
+                    return context.GetItemsAccroding(Date);
+                }
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine(exp.Message);
+                return new List<Tuple<int, int>>();
+            }
         }
 
         /// <summary>
@@ -49,7 +65,18 @@ namespace ASPTest.BL
         /// <returns></returns>
         public List<Tuple<int, int>> GetItemsAndCount()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (Model context = new Model())
+                {
+                    return context.GetItemsAndCount();
+                }
+            }
+            catch (Exception exp)
+            {
+                Debug.WriteLine(exp.Message);
+                return new List<Tuple<int, int>>();
+            }
         }
     }
 

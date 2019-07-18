@@ -1,11 +1,15 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutPage1.cshtml";
 }
 
 <h2>Index</h2>
 <script>
+
+    $(function () {
+        $("#datepicker").datepicker();
+    });
+
     $(function () {
         $("#nextBtn").on('click', function () {
             var tmp = $("#NextNumber");
@@ -15,6 +19,19 @@
         });
         ShowItems()
     });
+
+    $(function () {
+        $("#getItemsAccrodingBtn").on('click', function () {
+            ShowAccrodingItems();
+        });
+    });
+
+    $(function () {
+        $("#getItemsAndCountBtn").on('click', function () {
+            ShowItemsAndCount();
+        });
+    });
+
     function ShowItems() {
         var url = "/api/Calc";
         $.get(url, function (data) {
@@ -24,6 +41,30 @@
             });
         });
     }
+
+    function ShowAccrodingItems() {
+        var request = $('#datepicker').val();
+        var url = "/api/BackOffice/GetItemsAccroding?Date=" + request;
+        $.get(url, function (data) {
+            var tmpItems = $("#Items");
+            tmpItems.empty();
+            $.each(data, function () {
+                tmpItems.append("<li>" + this + "</li>");
+            });
+        });
+    }
+
+    function ShowItemsAndCount() {
+        var url = "/api/BackOffice/GetItemsAndCount";
+        $.get(url, function (data) {
+            var tmpItems = $("#Items");
+            tmpItems.empty();
+            $.each(data, function () {
+                tmpItems.append("<li>" + this + "</li>");
+            });
+        });
+    }
+
     function getNextNumber() {
         var request = $('#Number').val();
         var url = "/api/Calc?Postion=" + request;
@@ -32,6 +73,7 @@
             tmp.html(data);
         });
     }
+
 </script>
 <div>
     <input type="number" id="Number" />
@@ -40,6 +82,18 @@
 
     </p>
 </div>
+
+<div>
+    <input type="text" id="datepicker">
+    <button id="getItemsAccrodingBtn">Get Items Accroding</button>
+</div>
+
+<div>
+    <button id="getItemsAndCountBtn">Get Items And Count</button>
+</div>
+
 <div id="Items">
 
+
 </div>
+
