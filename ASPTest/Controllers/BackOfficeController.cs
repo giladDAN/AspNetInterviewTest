@@ -19,10 +19,9 @@ namespace ASPTest.Controllers
         /// </summary>
         /// <param name="Date"></param>
         /// <returns></returns>
-        public List<string> GetItemsAccroding(DateTime Date)
+        public List<Tuple<int, int>> GetItemsAccroding(DateTime Date)
         {
-            List<Tuple<int, int>> gia = _DataRepository.GetItemsAccroding(Date);
-            return gia.Select(item => $"{item.Item1},{item.Item2}").ToList();
+            return _DataRepository.GetItemsAccroding(Date);
         }
 
         /// <summary>
@@ -30,10 +29,9 @@ namespace ASPTest.Controllers
         /// 2,100 - the number 2 appears 100 times.
         /// </summary>
         /// <returns></returns>
-        public List<string> GetItemsAndCount()
+        public List<Tuple<int, int>> GetItemsAndCount()
         {
-            List<Tuple<int, int>> gia = _DataRepository.GetItemsAndCount();
-            return gia.Select(item => $"{item.Item1},{item.Item2}").ToList();
+            return _DataRepository.GetItemsAndCount();
         }
 
     }

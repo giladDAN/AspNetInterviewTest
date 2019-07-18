@@ -48,8 +48,8 @@
         $.get(url, function (data) {
             var tmpItems = $("#Items");
             tmpItems.empty();
-            $.each(data, function () {
-                tmpItems.append("<li>" + this + "</li>");
+            $.each(data, function (i) {
+                tmpItems.append("<li>" + data[i].m_Item1 + "," + data[i].m_Item2 + "</li>");
             });
         });
     }
@@ -59,8 +59,8 @@
         $.get(url, function (data) {
             var tmpItems = $("#Items");
             tmpItems.empty();
-            $.each(data, function () {
-                tmpItems.append("<li>" + this + "</li>");
+            $.each(data, function (i) {
+                tmpItems.append("<li>" + data[i].m_Item1 + "," + data[i].m_Item2  + "</li>");
             });
         });
     }
