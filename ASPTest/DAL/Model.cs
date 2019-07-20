@@ -35,6 +35,26 @@
             }
         }
 
+        public List<Tuple<int, int>> GetItemsAndCountLinq()
+        {
+            using (var context = new Model())
+            {
+                try
+                {
+                    return context.SelectedItems
+                        .GroupBy(item => item.Number)
+                        .ToList()
+                        .Select(group => new Tuple<int, int>(group.Key, group.Count())).ToList();
+                        
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+        }
+
         public List<Tuple<int, int>> GetItemsAccroding(DateTime Date)
         {
             using (var context = new Model())
@@ -46,6 +66,27 @@
                     var res = context.Database.SqlQuery<SelectedItemsAndCount>("GetItemsAccroding @dateParam", clientIdParameter).ToList();
 
                     return res.Select(item => new Tuple<int, int>(item.Number, item.Count)).ToList();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+        }
+
+        public List<Tuple<int, int>> GetItemsAccrodingLinq(DateTime Date)
+        {
+            using (var context = new Model())
+            {
+                try
+                {
+                    return context.SelectedItems
+                        .Where(item => item.ShowDate >= Date)
+                        .GroupBy(item => item.Number)
+                        .ToList()
+                        .Select(group => new Tuple<int, int>(group.Key, group.Count())).ToList();
+                        
                 }
                 catch (Exception ex)
                 {
