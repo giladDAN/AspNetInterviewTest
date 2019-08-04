@@ -5,41 +5,46 @@
 }
 
 <h2>Index</h2>
+<div id="nextPositionsData">
+    @foreach (var item in @ViewBag.nextPositions)
+    {
+        <input type="hidden" value='@item' />
+    }
+</div>
 <script>
-    $(function () {
-        $("#nextBtn").on('click', function () {
-            var tmp = $("#NextNumber");
-            tmp.html('');
-            getNextNumber();
 
+
+    $(function () {
+        $("#nextBtn").on('click', function () { 
+            var request = parseInt($('#Number').val()) + 1; 
+            var tmp = $("#NextNumber");  
+            var data = $('div#nextPositionsData>input:nth-child(' + request + ')').val();
+            if (data !== undefined) { 
+                tmp.html(data);
+                if (data != -1) {
+                    tmp.html(parseInt(data));
+                } else {
+                    tmp.html('There isn\'t next same value');
+                }
+            }
+            else {
+                tmp.html('Invalid value');
+            }
         });
-        ShowItems()
     });
-    function ShowItems() {
-        var url = "/api/Calc";
-        $.get(url, function (data) {
-            var tmp = $("#Items");
-            $.each(data, function () {
-                tmp.append("<li>" + this + "</li>");
-            });
-        });
-    }
-    function getNextNumber() {
-        var request = $('#Number').val();
-        var url = "/api/Calc?Postion=" + request;
-        $.get(url, function (data) {
-            var tmp = $("#NextNumber");
-            tmp.html(data);
-        });
-    }
 </script>
+
 <div>
     <input type="number" id="Number" />
     <button id="nextBtn">Next Number</button>
+    <a href="Backoffice">go to backoffice</a>
     <p id="NextNumber">
 
     </p>
 </div>
 <div id="Items">
-
+    @foreach (var item in @ViewBag.items)
+    {
+        <li>@item</li>
+    }
 </div>

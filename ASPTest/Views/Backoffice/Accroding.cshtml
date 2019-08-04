@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+
+@model List<Tuple<int, int>>
+
+<h2>Show Numbers</h2>
+
+<div>
+    <form method="get">
+        <input type="date" id="Datetime" name="date" placeholder="" />
+        <button id="fetch" type="button" onclick="process()">Fetch</button>
+    </form>
+    <a href="Home">return</a>
+</div>
+<script>
+    function process() {
+        var compare = $('#Datetime').val()
+        if (compare != '' && compare != undefined) {
+            var input = new Date();
+            input.setFullYear();
+            $('form').attr('action', '../Backoffice/accroding');
+        } else {
+            $('form').attr('action', '../Backoffice');
+        }
+        $('form').submit();
+    }
+</script>
+<div id="Items"></div>
+
+<table>
+
+    @foreach (var item in @ViewBag.data)
+    {
+        <tr>
+            <td>@item</td>
+        </tr>
+    }
+
+</table>

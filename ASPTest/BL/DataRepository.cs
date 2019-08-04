@@ -39,7 +39,52 @@ namespace ASPTest.BL
         /// <returns></returns>
         public List<Tuple<int, int>> GetItemsAccroding(DateTime Date)
         {
-            throw new NotImplementedException();
+
+            List<Tuple<int, int>> lst = new List<Tuple<int, int>>();
+
+            try
+            {
+                using (Model context = new Model())
+                {
+                    List<SelectedItems> temp = context.SelectedItems.Where(w => w.ShowDate.Year == Date.Year && w.ShowDate.Month == Date.Month && w.ShowDate.Day == Date.Day).OrderBy(z => z.Number).ToList();
+                    try
+                    {
+                        int num = temp.First().Number;
+                        int count = 0;
+
+                        for (int i = 0; i < 100; i++)
+                        {
+                            lst.Add(new Tuple<int, int>(i, 0));
+                        }
+                        foreach (SelectedItems item in temp)
+                        {
+                            if (item.Number == num)
+                            {
+                                count++;
+                            }
+                            else
+                            {
+                                lst.Remove(new Tuple<int, int>(num, 0));
+                                lst.Insert(num, new Tuple<int, int>(num, count));
+                                num = item.Number;
+                                count = 1;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        for (int i = 0; i < 100; i++)
+                        {
+                            lst.Add(new Tuple<int, int>(i, 0));
+                        }
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+            }
+
+            return lst;
         }
 
         /// <summary>
@@ -49,7 +94,43 @@ namespace ASPTest.BL
         /// <returns></returns>
         public List<Tuple<int, int>> GetItemsAndCount()
         {
-            throw new NotImplementedException();
+            List<Tuple<int, int>> lst = new List<Tuple<int, int>>();
+
+            try
+            {
+                using (Model context = new Model())
+                {
+                    List<SelectedItems> temp = context.SelectedItems.OrderBy(w => w.Number).ToList();
+
+                    int num = temp.First().Number;
+                    int count = 0;
+
+                    for (int i = 0; i < 100; i++)
+                    {
+                        lst.Add(new Tuple<int, int>(i, 0));
+                    }
+                    foreach (SelectedItems item in temp)
+                    {
+                        if (item.Number == num)
+                        {
+                            count++;
+                        }
+                        else
+                        {
+                            lst.Remove(new Tuple<int, int>(num, 0));
+                            lst.Insert(num, new Tuple<int, int>(num, count));
+                            num = item.Number;
+                            count = 1;
+                        }
+                    }
+                }
+            }
+            catch (Exception exp)
+            {
+            }
+
+            return lst;
+
         }
     }
 
