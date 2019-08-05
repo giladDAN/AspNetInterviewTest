@@ -1,8 +1,9 @@
-﻿using ASPTest.DAL;
+using ASPTest.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml.Linq;
 
 namespace ASPTest.BL
 {
@@ -39,52 +40,7 @@ namespace ASPTest.BL
         /// <returns></returns>
         public List<Tuple<int, int>> GetItemsAccroding(DateTime Date)
         {
-
-            List<Tuple<int, int>> lst = new List<Tuple<int, int>>();
-
-            try
-            {
-                using (Model context = new Model())
-                {
-                    List<SelectedItems> temp = context.SelectedItems.Where(w => w.ShowDate.Year == Date.Year && w.ShowDate.Month == Date.Month && w.ShowDate.Day == Date.Day).OrderBy(z => z.Number).ToList();
-                    try
-                    {
-                        int num = temp.First().Number;
-                        int count = 0;
-
-                        for (int i = 0; i < 100; i++)
-                        {
-                            lst.Add(new Tuple<int, int>(i, 0));
-                        }
-                        foreach (SelectedItems item in temp)
-                        {
-                            if (item.Number == num)
-                            {
-                                count++;
-                            }
-                            else
-                            {
-                                lst.Remove(new Tuple<int, int>(num, 0));
-                                lst.Insert(num, new Tuple<int, int>(num, count));
-                                num = item.Number;
-                                count = 1;
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        for (int i = 0; i < 100; i++)
-                        {
-                            lst.Add(new Tuple<int, int>(i, 0));
-                        }
-                    }
-                }
-            }
-            catch (Exception exp)
-            {
-            }
-
-            return lst;
+            return Filter(Date);
         }
 
         /// <summary>
@@ -94,20 +50,30 @@ namespace ASPTest.BL
         /// <returns></returns>
         public List<Tuple<int, int>> GetItemsAndCount()
         {
-            List<Tuple<int, int>> lst = new List<Tuple<int, int>>();
+            return Filter(null);
+        }
 
-            try
+        private List<Tuple<int, int>> Filter(DateTime? Date)
+        {
+            Dictionary<int, int> dict = new Dictionary<int, int>();
+
+            using (Model context = new Model())
             {
-                using (Model context = new Model())
-                {
-                    List<SelectedItems> temp = context.SelectedItems.OrderBy(w => w.Number).ToList();
+                List<SelectedItems> temp;
 
+                if (Date != null)
+                    temp = context.SelectedItems.Where(w => w.ShowDate.Year == Date.Value.Year && w.ShowDate.Month == Date.Value.Month && w.ShowDate.Day == Date.Value.Day).OrderBy(z => z.Number).ToList();
+                else
+                    temp = context.SelectedItems.OrderBy(z => z.Number).ToList();
+
+                if (temp.Count > 0)
+                {
                     int num = temp.First().Number;
                     int count = 0;
 
                     for (int i = 0; i < 100; i++)
                     {
-                        lst.Add(new Tuple<int, int>(i, 0));
+                        dict.Add(i, 0);
                     }
                     foreach (SelectedItems item in temp)
                     {
@@ -117,20 +83,20 @@ namespace ASPTest.BL
                         }
                         else
                         {
-                            lst.Remove(new Tuple<int, int>(num, 0));
-                            lst.Insert(num, new Tuple<int, int>(num, count));
+                            dict[num] = count;
                             num = item.Number;
                             count = 1;
                         }
                     }
                 }
             }
-            catch (Exception exp)
+
+            List<Tuple<int, int>> lst = new List<Tuple<int, int>>();
+            foreach (var item in dict)
             {
+                lst.Add(new Tuple<int, int>(item.Key, item.Value));
             }
-
             return lst;
-
         }
     }
 

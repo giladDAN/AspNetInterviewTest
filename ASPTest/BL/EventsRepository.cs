@@ -1,4 +1,4 @@
-﻿using ASPTest.BL;
+using ASPTest.BL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,31 +17,26 @@ namespace ASPTest
         Random _rand = new Random();
         public EventsRepository()
         {
-            initialize();
             for (int i = 0; i < 100; i++)
             {
                 int num = _rand.Next(0, 100);
                 Items.Add(num);
-                //                updateNextPositions(i, num);
             }
+
+            initialize();
             for (int j = 0; j < 100; j++)
             {
-                updateNextPositions(j, 1);
+                updateNextPositions(j, Items[j]);
             }
-            _DataRepository.SaveItems(Items);
         }
 
         private void updateNextPositions(int idx, int num)
         {
-            this.NextPositions[idx] = Items.FindIndex(idx + 1, u => u == this.Items[idx]);
-            //            if (this.ValuesByPositions[num] != -1)
-            //            {
-            //                this.NextPositions[this.ValuesByPositions[num]] = idx;
-            //            }
-            //            else
-            //            {
-            //                this.ValuesByPositions[num] = idx;
-            //            }
+            if (this.ValuesByPositions[num] != -1)
+            {
+                this.NextPositions[this.ValuesByPositions[num]] = idx;
+            }
+            this.ValuesByPositions[num] = idx;
         }
 
         private void initialize()
@@ -59,9 +54,12 @@ namespace ASPTest
             }
         }
 
-        public int Next(int Postion)
+        public int Next(int position)
         {
-            return this.NextPositions[Postion];
+            int res = -2;
+            if(position>=0 && position <=99)
+                res = this.NextPositions[position];
+            return res;
         }
 
         public int[] getNextPositions()

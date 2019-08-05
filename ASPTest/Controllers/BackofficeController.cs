@@ -1,4 +1,4 @@
-﻿using ASPTest.BL;
+using ASPTest.BL;
 using ASPTest.DAL;
 using System;
 using System.Collections.Generic;
